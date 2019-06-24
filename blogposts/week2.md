@@ -1,4 +1,4 @@
-# Detailed Visualisation Pipeline
+# Detailed First insights
 > **Date:** 24.06. *(Due: 24.06.)*  
 > **Name:** Lasse, Lando, Hao  
 ----
@@ -54,7 +54,7 @@ The 'heatmap' shows for each federal election year the sum of the terms from all
 This 'piemap' works similar to the last seen visualisation but instead of showing just the party which has most contributed to the TF-IDF-sum of a specific term, we can see the distributions for the terms as small pie diagrams. The size again represents the overall specificity for the election year. Size is weighted different in this, leading to different sized circles, but the ratios are retained.
 
 ##### Document Vector UMAP Reduction
-![UMAP Reduction](imgs/umap.png)
+![UMAP Reduction](imgs/UMAP.png)
 
 We used TF-IDF-Vectors as document vectors for all federal manifestos, reduced their dimension with UMAP and generated a scotter plot from the results. Color represents a party's color and the election result is mapped to the circle size. The label size containing the election year represents the Coleman Liau readability.
 While it is still hard to see if there is a correlation between readability and result we can identify easily the clusters for the parties. Maybe the most interesting thing is the location for AFD at the year 2013 near to the FDP. This is the year in which FDP got less than 5% of the votes.

@@ -59,7 +59,18 @@ This 'piemap' works similar to the last seen visualisation but instead of showin
 We used TF-IDF-Vectors as document vectors for all federal manifestos, reduced their dimension with UMAP and generated a scotter plot from the results. Color represents a party's color and the election result is mapped to the circle size. The label size containing the election year represents the Coleman Liau readability.
 While it is still hard to see if there is a correlation between readability and result we can identify easily the clusters for the parties. Maybe the most interesting thing is the location for AFD at the year 2013 near to the FDP. This is the year in which FDP got less than 5% of the votes.
 
-#### 4. 
+#### 4. Manifesto's Distances
+We wanted to see how similar the manifestos were particular election years and how they developed over the years.
+For this purpose we trained a word2vec word embedding with 100 dimensions with all manifestos and summed all word vectors which
+occurred in each manifesto to get a document vector for each manifesto.
+We then calculated the cosine distance of each manifesto of two chosen parties over the election years.
+
+![Distance CDU SPD](imgs/dist-cdu-spd.png)
+![Distance CDU SPD](imgs/dist-cdu-fdp.png)
+![Distance CDU SPD](imgs/dist-spd-gruene.png)
+
+Each bar on the x-axis represents the distance of two manifestos for the corresponding election year.
+The smaller or closer the two different colored bars are, the more similar the two compared manifestos are. 
 
 ## Learnings
 We identified two major kinds of visualisations.

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Word Bubbles</title>
+
+		<style>
+			.bubble circle.circle-left {
+				fill: #99c0e5;
+			}
+
+			.bubble circle.circle-right {
+				fill: #fda4a7;
+			}
+
+			text {
+				font-family: sans-serif;
+				color: #000;
+			}
+		</style>
+	</head>
+	<body>
+		<script src="https://d3js.org/d3.v4.min.js"></script>
+		<script>
+
+			var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+			var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+			var center = { x: width / 2, y: height / 2 };
+
+
+			var forceStrength = 0.03;
+
+			function charge(d) {
+    			return -Math.pow(d.radius, 2.0) * forceStrength;
+			}
+
+			function appendLeft(bubbles) {
+				var bubblesLeft = bubbles
+		      		.append("g")
+		      		.attr("class", "bubble-left")
+
+	      		bubblesLeft
+		      		.append("clipPath")
+		      		.attr("id", function(d) { return "circle-left-clip-" + d.id; })
+		      		.append("rect")
+		      		.attr("height", function(d) { return 2 * d.radius; })
+		      		.attr("width", function(d) { return (2 * d.radius * d.left) / d.value; })
+		      		.attr("x", function(d) { return -d.radius })
+		      		.attr("y", function(d) { return -d.radius })
+		      		.attr("fill", "rgb(0,0,255)");
+
+		      	bubblesLeft
+		    		.append("circle")
+		    		.attr("class", "circle-left")
+		    		.attr("r", function (d) { return d.radius; })
+		    		.attr("clip-path", function(d) { return "url(#circle-left-clip-" + d.id + ")" });
+			}
+
+			function appendRight(bubbles) {
+				var bubblesRight = bubbles
+	      			.append("g")
+		      		.attr("class", "bubble-right");
+
+				bubblesRight
+		      		.append("clipPath")
+		      		.attr("id", function(d) { return "circle-right-clip-" + d.id; })
+		      		.append("rect")
+		      		.attr("height", function(d) { return 2 * d.radius; })
+		      		.attr("width", function(d) { return (2 * d.radius * d.right) / d.value; })
+		      		.attr("x", function(d) { return ((2 * d.radius * d.left) / d.value - d.radius); })
+		      		.attr("y", function(d) { return -d.radius })
+		      		.attr("fill", "rgb(0,0,255)");
+
+		      	bubblesRight
+		    		.append("circle")
+		    		.attr("class", "circle-right")
+		    		.attr("r", function (d) { return d.radius; })
+		    		.attr("clip-path", function(d) { return "url(#circle-right-clip-" + d.id + ")" });
+			}
+
+			function appendText(bubbles, maxValue) {
+				bubbles
+		      		.append("text")
+		      		.attr("font-size", function(d) { return (50 * (d.value / maxValue) > 10) ? (50 * (d.value / maxValue)) : 10; })
+		      		.attr("dy", ".3em")
+      				.attr("text-anchor", "middle")
+		      		.text(function(d) { return d.name; });
+
+	      		bubbles
+	      			.append("text")
+	      			.attr("font-size", "10px")
+	      			.attr("dy", function(d) { return (d.radius / 25) + "em"})
+	      			.attr("text-anchor", "middle")
+	      			.text(function(d) { return d.left + " - " + d.right; });
+			}
+
+			function getTicked(bubbles) {
+				function ticked() {
+    				bubbles.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+				}
+
+				return ticked;
+			}
+
+			var svg = d3
+				.select("body")
+				.append("svg")
+		    	.attr("width", width)
+		    	.attr("height", height);
+
+	    	var simulation = d3
+	    		.forceSimulation()
+	    		.velocityDecay(0.2)
+	    		.force("x", d3.forceX().strength(forceStrength).x(center.x))
+				.force("y", d3.forceY().strength(forceStrength).y(center.y))
+		    	.force("charge", d3.forceManyBody().strength(charge));
+
+	    	simulation.stop();
+
+		    d3.json("bubbles.json", function(error, json) {
+			  	if (error) throw error;
+
+			  	var maxValue = d3.max(json, function(d) { return d.value; });
+			  	var maxLeft = d3.max(json, function(d) { return d.left; });
+			  	var maxRight = d3.max(json, function(d) { return d.right; });
+
+			  	var scaleValue = d3
+			  		.scalePow()
+			  		.exponent(0.5)
+      				.range([2, 85])
+					.domain([0, maxValue]);
+
+				var nodes = json.map(function(node) {
+					return {
+						id: node.id,
+						name: node.name,
+						value: node.value,
+						left: node.left,
+						right: node.right,
+						radius: scaleValue(node.value),
+						x: center.x - (((node.left - node.right) * (width / 2)) / node.value),
+						y: center.y - ((maxValue / node.value) * (Math.random() > 0.5 ? -1 : 1) * (height / 2))
+					};
+				}).sort(function(x, y) { return x.value - y.value; });
+
+				var bubbles = svg
+			  		.selectAll(".bubble")
+			      	.data(nodes)
+			      	.enter()
+			      	.append("g")
+			      	.attr("class", "bubble");
+
+		      	appendLeft(bubbles)
+
+		      	appendRight(bubbles)
+
+	    		appendText(bubbles, maxValue)
+
+	  			simulation
+	  				.nodes(nodes)
+	  				.on("tick", getTicked(bubbles));
+
+  				simulation
+  					.force("x", d3.forceX().strength(forceStrength).x(center.x));
+
+				simulation
+					.alpha(1)
+					.restart();
+			});
+
+		</script>
+	</body>
+</html>

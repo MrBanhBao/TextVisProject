@@ -1,0 +1,65 @@
+[
+    {
+        "id": 3464,
+        "name": "prozent",
+        "value": 98,
+        "left": 82,
+        "right": 16
+    },
+    {
+        "id": 1449,
+        "name": "eu",
+        "value": 123,
+        "left": 95,
+        "right": 28
+    },
+    {
+        "id": 17675,
+        "name": "kapitel",
+        "value": 66,
+        "left": 51,
+        "right": 15
+    },
+    {
+        "id": 2667,
+        "name": "krankenh\u00e4user",
+        "value": 22,
+        "left": 13,
+        "right": 9
+    },
+    {
+        "id": 1452,
+        "name": "euro",
+        "value": 120,
+        "left": 98,
+        "right": 22
+    },
+    {
+        "id": 1107,
+        "name": "einfluss",
+        "value": 22,
+        "left": 14,
+        "right": 8
+    },
+    {
+        "id": 3092,
+        "name": "muss",
+        "value": 396,
+        "left": 324,
+        "right": 72
+    },
+    {
+        "id": 506,
+        "name": "beenden",
+        "value": 39,
+        "left": 27,
+        "right": 12
+    },
+    {
+        "id": 5278,
+        "name": "\u2013",
+        "value": 210,
+        "left": 174,
+        "right": 36
+    }
+]

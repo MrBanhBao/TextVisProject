@@ -221,25 +221,31 @@ d3.csv("bubbles_data4.csv", function(data) {
   // ---------------------------//
   //           BUTTON           //
   // ---------------------------//
-
+	
+	function buttonToDims(selectedGroup){
+		var dim1=""
+		var dim2=""
+		if (selectedGroup=="UMAP"){
+			dim1="dim11"
+			dim2="dim12"
+		}
+		if (selectedGroup=="tSNE"){
+			dim1="dim21"
+			dim2="dim22"
+		}
+		if (selectedGroup=="PCA"){
+			dim1="dim31"
+			dim2="dim32"
+		}
+		return [dim1,dim2];
+	}
 
     // A function that update the chart
     function update(selectedGroup) {
 	
-	var dim1=""
-	var dim2=""
-	if (selectedGroup=="UMAP"){
-		dim1="dim11"
-		dim2="dim12"
-	}
-	if (selectedGroup=="tSNE"){
-		dim1="dim21"
-		dim2="dim22"
-	}
-	if (selectedGroup=="PCA"){
-		dim1="dim31"
-		dim2="dim32"
-	}
+		var tuple=buttonToDims(selectedGroup);
+		dim1=tuple[0];
+		dim2=tuple[1];
       // Create new data with the selection?
       //var dataFilter = data.map(function(d){return {year: d.year, value:d[selectedGroup]} })
 	  var dataFilter = data.map(function(d){return {label: d.label,party: d.party,dim11: d[dim1], dim12: d[dim2]} })
@@ -285,10 +291,13 @@ d3.csv("bubbles_data4.csv", function(data) {
     //density =  kde( data.map(function(d){  return d.price; }) )
     console.log(binNumber)
 	choosen_year=map_bin_to_year(binNumber)
-	
-	
+	var selectedOption = d3.select("#selectButton").property("value")
+	var tuple=buttonToDims(selectedOption);
+	dim1=tuple[0];
+	dim2=tuple[1];
 	 //var dataFilter = data.map(function(d){return {label: d.label,party: d.party,year:d.year,dim11: d.dim11, dim12: d.dim12, size: d.size} })
-	 	  var dataFilter = data.map(function(d){return {label: d.label, party: d.party, dim11: d.dim11, dim12: d.dim12, size: d["size_"+choosen_year], fontsize: d["size_"+choosen_year]} })
+	var dataFilter = data.map(function(d){return {label: d.label, party: d.party, dim11: d[dim1], dim12: d[dim2], size: d["size_"+choosen_year], fontsize: d["size_"+choosen_year]} })
+		  
 	  	
 
 		  

@@ -37,12 +37,13 @@ d3.json('js/data/d3_distance_result_data.json').then(function(d) {
         height = 400 - margin.top - margin.bottom;
 
     let barWidth = height / yearData.distances.length,
+        labelGap = 80,
         gap = 5;
 
     // Scaling
     let xScale = d3.scaleLinear()
         .domain([0, d3.max(distancesData)])
-        .range([0, width/2]);
+        .range([0, width/2-labelGap]);
 
     let yScale = d3.scaleLinear()
         .domain([0, yearData.distances.length])
@@ -110,14 +111,13 @@ d3.json('js/data/d3_distance_result_data.json').then(function(d) {
         })
         .attr('height', barWidth-gap)
         .attr('x', function(d) {
-            return (width/2+margin.left)-xScale(d.distance)
+            return (width/2+margin.left-(labelGap/2))-xScale(d.distance)
 
         });
 
     leftBarsGroups.append('text')
         .attr('x', function(d) {
-            bbox = this.parentNode.firstChild.getBBox();
-            return bbox.x + bbox.width/2
+            return (width+margin.left+margin.right)/2-labelGap/2/2
         })
         .attr('y', function(d) {
             bbox = this.parentNode.firstChild.getBBox();
@@ -142,14 +142,13 @@ d3.json('js/data/d3_distance_result_data.json').then(function(d) {
         })
         .attr('height', barWidth-gap)
         .attr('x', function(d) {
-            return (width/2+margin.left)
+            return (width/2+margin.left+(labelGap/2))
 
         });
 
     rightBarsGroups.append('text')
         .attr('x', function(d) {
-            bbox = this.parentNode.firstChild.getBBox();
-            return bbox.x + bbox.width/2
+            return (width+margin.left+margin.right)/2+labelGap/2/2
         })
         .attr('y', function(d) {
             bbox = this.parentNode.firstChild.getBBox();
@@ -201,13 +200,12 @@ d3.json('js/data/d3_distance_result_data.json').then(function(d) {
             })
             .attr('height', barWidth-gap)
             .attr('x', function(d) {
-                return (width/2+margin.left)-xScale(d.distance)
+                return (width/2+margin.left-(labelGap/2))-xScale(d.distance)
 
             });
-        console.log(leftBarsGroups.selectAll('rect'))
 
 
-        leftBarsGroups.selectAll('text')
+        /*leftBarsGroups.select('text')
             .data(yearData.distances)
             .enter()
             .transition()
@@ -224,7 +222,7 @@ d3.json('js/data/d3_distance_result_data.json').then(function(d) {
                     bbox = this.parentNode.firstChild.getBBox();
                     return bbox.y + bbox.height/1.5
                 }
-            });
+            });*/
 
 
         // right bars
@@ -237,11 +235,11 @@ d3.json('js/data/d3_distance_result_data.json').then(function(d) {
             })
             .attr('height', barWidth-gap)
             .attr('x', function(d) {
-                return (width/2+margin.left)
+                return (width/2+margin.left+(labelGap/2))
 
             });
 
-        rightBarsGroups.selectAll('text')
+        /*rightBarsGroups.select('text')
             .data(yearData.distances)
             .transition()
             .duration(1000)
@@ -256,7 +254,7 @@ d3.json('js/data/d3_distance_result_data.json').then(function(d) {
                     bbox = this.parentNode.firstChild.getBBox();
                     return bbox.y + bbox.height/1.5
                 }
-            });
+            });*/
     }
 
 });

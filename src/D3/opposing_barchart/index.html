@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Text Visualisation</title>
+    <link rel="stylesheet" type="text/css" href="opposing_barchart.css">
+</head>
+<body>
+    <input type="range" name="mySlider" id="mySlider" min="0" max="18" step="1" list="tickmarks" value="0">
+
+    <datalist id="tickmarks">
+        <option value="0" label="1949">
+        <option value="1">
+        <option value="2">
+        <option value="3">
+        <option value="4">
+        <option value="5">
+        <option value="6">
+        <option value="7">
+        <option value="8">
+        <option value="9">
+        <option value="10">
+        <option value="11">
+        <option value="12">
+        <option value="13">
+        <option value="14">
+        <option value="15">
+        <option value="16">
+        <option value="17">
+        <option value="18" label="2017">
+    </datalist>
+    <div id="vis">
+
+    </div>
+
+    <script src="js/libs/d3/d3.js"></script>
+    <script src="js/opposing_barchart.js"></script>
+</body>
+</html>

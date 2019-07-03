@@ -1,0 +1,61 @@
+rect.cducsu {
+    fill: #343434
+}
+
+rect.spd {
+    fill: #cc0000
+}
+
+rect.fdp {
+    fill: #ffe14e
+}
+
+rect.linke {
+    fill: #9b31ab
+}
+
+rect.gruene {
+    fill: #029e00
+}
+
+rect.afd {
+    fill: #3ca4d2
+}
+
+
+.bar text {
+    font-family: "Helvetica", serif;
+    text-shadow: -1px 0 0 rgba(0, 0, 0, 1), 0 1px 0 #000000, 0 -1px 0 rgba(0, 0, 0, 1), 1px 1px #000000, -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000;
+    font-size:  11px;
+    font-weight: bold;
+    text-anchor: middle;
+    text-align:  -webkit-center;
+    fill: #ffffff;
+    display: none;
+}
+
+.coalition g.left-bar rect, .coalition g.right-bar rect {
+    stroke: #88ff8a;
+    stroke-width: 3px;
+}
+
+
+.highlight g.left-bar rect, .highlight g.right-bar rect {
+    opacity: 0.6;
+}
+
+
+.highlight g.left-bar text,  .highlight g.right-bar text {
+    font-family: "Helvetica", serif;
+    text-shadow: -1px 0 0 rgba(0, 0, 0, 1), 0 1px 0 #000000, 0 -1px 0 rgba(0, 0, 0, 1), 1px 1px #000000, -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000;
+    font-size:  11px;
+    font-weight: bold;
+    text-anchor: middle;
+    text-align:  -webkit-center;
+    fill: #ffffff;
+    display: block;
+}
+
+#mySlider {
+    width: 600px;
+}

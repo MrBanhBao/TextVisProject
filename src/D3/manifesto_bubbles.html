@@ -57,8 +57,8 @@ var svg = d3.select("#my_dataviz")
 
 
 //Read the data
-d3.csv("bubbles_data3.csv", function(data) {
-
+//d3.csv("bubbles_data3.csv", function(data) {
+d3.json("manifesto_bubbles.json", function(data) {
     // List of groups (here I have one group per column)
     var allGroup = ["UMAP", "tSNE","PCA"]
 

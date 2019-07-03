@@ -3,7 +3,7 @@
 <meta charset="utf-8">
 
 <!-- Load d3.js -->
-<script src="https://d3js.org/d3.v4.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
 
 <!-- Initialize a select button -->
 <select id="selectButton"></select>
@@ -70,6 +70,7 @@
   fill: #aaa;
 }
 
+
 </style>
 
 
@@ -88,7 +89,7 @@ var svg = d3.select("#my_dataviz")
   .append("g")
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
-		  
+
 	var year_label = svg.append("text")
     .attr("class", "year label")
     .attr("text-anchor", "end")
@@ -96,10 +97,81 @@ var svg = d3.select("#my_dataviz")
     .attr("x", width)
     .text(1983);
 
+
+
+
 //Read the data
 //d3.csv("bubbles_data4.csv", function(data) {
 d3.json("time_bubbles.json", function(data) {
 
+
+// create a clipping region 
+svg.append("defs").append("clipPath")
+    .attr("id", "clip")
+  .append("rect")
+    .attr("width", width)
+    .attr("height", height);
+
+var xScale = d3.scaleLinear()
+  .domain([-5, 105])
+  .range([0, width]);
+var yScale = d3.scaleLinear()
+  .domain([-5, 105])
+  .range([height, 0]);	
+
+// create axis objects
+var xAxis = d3.axisBottom(xScale)
+  .ticks(3);
+var yAxis = d3.axisLeft(yScale)
+  .ticks(20, "s");
+// Draw Axis
+var gX = svg.append('g')
+  .attr("transform", "translate(0," + height + ")")
+  .call(xAxis);
+var gY = svg.append('g')
+  .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+  .call(yAxis);
+ 
+// Pan and zoom
+var zoom = d3.zoom()
+    .scaleExtent([.25, 100])
+    .extent([[0, 0], [width, height]])
+    .on("zoom", zoomed);
+var xLastZoomed=xScale
+var yLastZoomed=yScale
+function zoomed() {
+// create new scale ojects based on event
+    var new_xScale = d3.event.transform.rescaleX(xScale);
+    var new_yScale = d3.event.transform.rescaleY(yScale);
+// update axes
+
+	var selectedOption = d3.select("#selectButton").property("value")
+	var tuple=buttonToDims(selectedOption);
+	dim1=tuple[0];
+	dim2=tuple[1];
+	var dataFilter = data.map(function(d){return {label: d.label,party: d.party,dim11: d[dim1], dim12: d[dim2]} })
+	
+    gX.call(xAxis.scale(new_xScale));
+    gY.call(yAxis.scale(new_yScale));
+    dot.data(dataFilter)
+     .attr('cx', function(d) {return new_xScale(d.dim11)})
+     .attr('cy', function(d) {return new_yScale(d.dim12)});
+	label.data(dataFilter)
+     .attr('x', function(d) {return new_xScale(d.dim11)})
+     .attr('y', function(d) {return new_yScale(d.dim12)});
+	 
+	xLastZoomed=new_xScale
+	yLastZoomed=new_yScale
+}
+
+svg.append("rect")
+    .attr("width", width)
+    .attr("height", height)
+    .style("fill", "none")
+    .style("pointer-events", "all")
+    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+    .call(zoom);
+	
     // List of groups (here I have one group per column)
     var allGroup = ["UMAP", "tSNE","PCA"]
 
@@ -119,12 +191,20 @@ d3.json("time_bubbles.json", function(data) {
   // ---------------------------//
 
   // Add X axis
+  
+  // create scale objects
+
+
+  /*
   var x = d3.scaleLinear()
     .domain([-5, 105])
     .range([ 0, width ]);
-  svg.append("g")
+	
+var xAxis = d3.axisBottom(x).ticks(3);
+
+  var gX = svg.append("g")
     .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x).ticks(3));
+    .call(xAxis);
 
   // Add X axis label:
   svg.append("text")
@@ -134,11 +214,14 @@ d3.json("time_bubbles.json", function(data) {
       .text("dim 1");
 
   // Add Y axis
+ 
   var y = d3.scaleLinear()
     .domain([-5, 105])
     .range([ height, 0]);
-  svg.append("g")
-    .call(d3.axisLeft(y));
+	
+ var yAxis=d3.axisLeft(y)
+ var gY =  svg.append("g")
+    .call(yAxis);
 
   // Add Y axis label:
   svg.append("text")
@@ -146,7 +229,8 @@ d3.json("time_bubbles.json", function(data) {
       .attr("x", 0)
       .attr("y", -20 )
       .text("dim 2")
-      .attr("text-anchor", "start")
+      .attr("text-anchor", "start")*/
+
 
   // Add a scale for bubble size
   var z = d3.scaleLinear()
@@ -261,15 +345,15 @@ d3.json("time_bubbles.json", function(data) {
         .data(dataFilter)
         .transition()
         .duration(1000)
-          .attr("cx", function(d) { return x(d.dim11); })
-          .attr("cy", function(d) { return y(d.dim12); })
+          .attr("cx", function(d) { return xLastZoomed(d.dim11); })
+          .attr("cy", function(d) { return yLastZoomed(d.dim12); })
 		  
 	  label
         .data(dataFilter)
         .transition()
         .duration(1000)
-          .attr("x", function(d) { return x(d.dim11); })
-          .attr("y", function(d) { return y(d.dim12); })
+          .attr("x", function(d) { return xLastZoomed(d.dim11); })
+          .attr("y", function(d) { return yLastZoomed(d.dim12); })
     }
 	// When the button is changed, run the updateChart function
     d3.select("#selectButton").on("change", function(d) {
@@ -302,7 +386,7 @@ d3.json("time_bubbles.json", function(data) {
 	dim1=tuple[0];
 	dim2=tuple[1];
 	 //var dataFilter = data.map(function(d){return {label: d.label,party: d.party,year:d.year,dim11: d.dim11, dim12: d.dim12, size: d.size} })
-	var dataFilter = data.map(function(d){return {label: d.label, party: d.party, dim11: d[dim1], dim12: d[dim2], size: d["size_"+choosen_year], fontsize: d["size_"+choosen_year]} })
+	var dataFilter = data.map(function(d){return {label: d.label, party: d["party_"+choosen_year], fontcolor: d.color, color: d["color_"+choosen_year],dim11: d[dim1], dim12: d[dim2], size: d["size_"+choosen_year], fontsize: d["size_"+choosen_year]} })
 		  
 	  	
 
@@ -311,25 +395,27 @@ d3.json("time_bubbles.json", function(data) {
         .data(dataFilter)
         .transition()
         .duration(1000)
-          .attr("cx", function(d) { 
-		  //console.log(d.dim11+" "+d.dim12)
-		  return x(d.dim11); })
-          .attr("cy", function(d) { return y(d.dim12); })
+          .attr("cx", function(d) { return xLastZoomed(d.dim11); })
+          .attr("cy", function(d) { return yLastZoomed(d.dim12); })
+		  .attr("class", function(d) { return "bubbles " + d.party })
 		  .attr("r", function (d) { return z(d.size); } )
+		  .style("fill", function (d) { return d.color; } )
 		  
 	  label
         .data(dataFilter)
         .transition()
         .duration(1000)
-          .attr("x", function(d) { return x(d.dim11); })
-          .attr("y", function(d) { return y(d.dim12); })
+          .attr("x", function(d) { return xLastZoomed(d.dim11); })
+          .attr("y", function(d) { return yLastZoomed(d.dim12); })
+		  .attr("class", function(d) { return "labels " + d.party })
 		  .attr("font-size", function (d) { return w(d.fontsize); } )
+		  .style("fill", function (d) { return d.fontcolor; } )
 		  
 	year_label.text(choosen_year);
 
   }
   
-  
+
 
 	// Listen to the slider?
   d3.select("#mySlider").on("change", function(d){
@@ -337,6 +423,7 @@ d3.json("time_bubbles.json", function(data) {
     updateChart(selectedValue)
   })
 	
+
   // ---------------------------//
   //       Visuals              //
   // ---------------------------//
@@ -347,11 +434,11 @@ d3.json("time_bubbles.json", function(data) {
     .data(data)
     .enter()
     .append("circle")
-      .attr("class", function(d) { return "bubbles " + d.party })
-      .attr("cx", function (d) { return x(d.dim11); } )
-      .attr("cy", function (d) { return y(d.dim12); } )
+      .attr("class", function(d) { return "bubbles " + d.party_1983 })
+      .attr("cx", function (d) { return xScale(d.dim11); } )
+      .attr("cy", function (d) { return yScale(d.dim12); } )
       .attr("r", function (d) { return z(d.size_1983); } )
-      .style("fill", function (d) { return d.color; } )
+      .style("fill", function (d) { return d.color_1983; } )
 	  .style("stroke", "white")
     // -3- Trigger the functions for hover
     .on("mouseover", showTooltip )
@@ -365,9 +452,9 @@ d3.json("time_bubbles.json", function(data) {
       .data(data)
       .enter()
       .append("text")
-		.attr("class", function(d) { return "labels " + d.party })
-        .attr("x", function (d) { return x(d.dim11); })
-        .attr("y", function (d) { return y(d.dim12); })
+		.attr("class", function(d) { return "labels " + d.party_1983 })
+        .attr("x", function (d) { return xScale(d.dim11); })
+        .attr("y", function (d) { return yScale(d.dim12); })
 		.attr("stroke-width", 0.2)
 		.attr("stroke", "#000000")
         .style("fill", function(d){ return d.fontcolor;})
@@ -467,5 +554,8 @@ d3.json("time_bubbles.json", function(data) {
         .style("alignment-baseline", "middle")
         .on("mouseover", highlight)
         .on("mouseleave", noHighlight)
+		
+
   })
+
 </script>

@@ -97,7 +97,8 @@ var svg = d3.select("#my_dataviz")
     .text(1983);
 
 //Read the data
-d3.csv("bubbles_data4.csv", function(data) {
+//d3.csv("bubbles_data4.csv", function(data) {
+d3.json("time_bubbles.json", function(data) {
 
     // List of groups (here I have one group per column)
     var allGroup = ["UMAP", "tSNE","PCA"]
@@ -149,8 +150,13 @@ d3.csv("bubbles_data4.csv", function(data) {
 
   // Add a scale for bubble size
   var z = d3.scaleLinear()
-    .domain([1, 100])
-    .range([ 5, 40]);
+    .domain([0, 100])
+    .range([ 0, 40]);
+	
+  // Add a scale for text size
+  var w = d3.scaleLinear()
+    .domain([0, 100])
+    .range([ 0, 40]);
 
   // Add a scale for bubble color
   var myColor = d3.scaleOrdinal()
@@ -317,7 +323,7 @@ d3.csv("bubbles_data4.csv", function(data) {
         .duration(1000)
           .attr("x", function(d) { return x(d.dim11); })
           .attr("y", function(d) { return y(d.dim12); })
-		  .attr("font-size", function (d) { return z(d.fontsize); } )
+		  .attr("font-size", function (d) { return w(d.fontsize); } )
 		  
 	year_label.text(choosen_year);
 
@@ -366,7 +372,7 @@ d3.csv("bubbles_data4.csv", function(data) {
 		.attr("stroke", "#000000")
         .style("fill", function(d){ return d.fontcolor;})
 		.attr("font-family", "sans-serif")
-		.attr("font-size", function (d) { return z(d.size_1983); } )
+		.attr("font-size", function (d) { return w(d.size_1983); } )
         .text(function(d){ return d.label})
         .attr("text-anchor", "left")
         .style("alignment-baseline", "middle")

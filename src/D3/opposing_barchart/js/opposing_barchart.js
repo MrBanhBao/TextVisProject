@@ -57,15 +57,19 @@ d3.json('js/data/d3_distance_result_data.json').then(function(d) {
         .attr('height', 400);
 
     // Axis
-    let xAxisValues = d3.scaleLinear()
-        .domain([-d3.max(distancesData), d3.max(distancesData)])
-        .range([0, width]);
+    let xAxisLeftValues = d3.scaleLinear()
+        .domain([d3.max(distancesData), 0])
+        .range([0, width/2-labelGap/2, ]);
 
-    let xAxisTicks = d3.axisBottom(xAxisValues)
-        .ticks(10);
+    let xAxisLeftTicks = d3.axisBottom(xAxisLeftValues)
+        .ticks(5);
 
-    // Slider
+    let xAxisRightValues = d3.scaleLinear()
+        .domain([0, d3.max(distancesData)])
+        .range([0, width/2-labelGap/2]);
 
+    let xAxisRightTicks = d3.axisBottom(xAxisRightValues)
+        .ticks(5);
 
 
     // Opposing Barchar
@@ -174,11 +178,16 @@ d3.json('js/data/d3_distance_result_data.json').then(function(d) {
         });
 
 
-    //Axis
-    let xGuide = d3.select('#vis svg')
+    // Guides
+    let xGuideLeft = d3.select('#vis svg')
         .append('g')
-        .attr('transform', 'translate('+ margin.left +','+ (height+6) +')')
-        .call(xAxisTicks);
+        .attr('transform', 'translate('+ (margin.left) +','+ (height+6) +')')
+        .call(xAxisLeftTicks);
+
+    let xGuideRight = d3.select('#vis svg')
+        .append('g')
+        .attr('transform', 'translate('+ (width/2+labelGap/2+margin.left) +','+ (height+6) +')')
+        .call(xAxisRightTicks);
 
 
     function refresh(yearData) {

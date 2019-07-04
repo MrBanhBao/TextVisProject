@@ -31,7 +31,7 @@ d3.json('js/data/d3_distance_result_data.json').then(function(d) {
             return distances
         }).flat();
 
-    let margin = {top: 10, right: 10, bottom: 15, left: 10};
+    let margin = {top: 10, right: 0, bottom: 20, left: 0};
 
     let width = 600 - margin.left - margin.right,
         height = 400 - margin.top - margin.bottom;
@@ -47,14 +47,14 @@ d3.json('js/data/d3_distance_result_data.json').then(function(d) {
 
     let yScale = d3.scaleLinear()
         .domain([0, yearData.distances.length])
-        .range([0, height]);
+        .range([0, height-margin.bottom]);
 
 
     //SVG
     let svg = d3.select('#vis')
         .append('svg')
-        .attr('width', 600)
-        .attr('height', 400);
+        .attr('width', width)
+        .attr('height', height);
 
     // Axis
     let xAxisLeftValues = d3.scaleLinear()
@@ -95,7 +95,7 @@ d3.json('js/data/d3_distance_result_data.json').then(function(d) {
             return d.coalition
         })
         .attr("transform", function(d, i) {
-            return "translate(0," + (yScale(i) + margin.top) + ")";
+            return "translate(0," + (yScale(i)) + ")";
         });
 
 
@@ -181,12 +181,12 @@ d3.json('js/data/d3_distance_result_data.json').then(function(d) {
     // Guides
     let xGuideLeft = d3.select('#vis svg')
         .append('g')
-        .attr('transform', 'translate('+ (margin.left) +','+ (height+6) +')')
+        .attr('transform', 'translate('+ (margin.left) +','+ (height-margin.bottom) +')')
         .call(xAxisLeftTicks);
 
     let xGuideRight = d3.select('#vis svg')
         .append('g')
-        .attr('transform', 'translate('+ (width/2+labelGap/2+margin.left) +','+ (height+6) +')')
+        .attr('transform', 'translate('+ (width/2+labelGap/2+(margin.left-1)) +','+ (height-margin.bottom) +')')
         .call(xAxisRightTicks);
 
 

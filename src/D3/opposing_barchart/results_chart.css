@@ -1,0 +1,31 @@
+path.cducsu {
+    stroke: #343434
+}
+
+path.spd {
+    stroke: #cc0000
+}
+
+path.fdp {
+    stroke: #ffe14e
+}
+
+path.linke {
+    stroke: #9b31ab
+}
+
+path.gruene {
+    stroke: #029e00
+}
+
+path.afd {
+    stroke: #3ca4d2
+}
+
+path.wahlbeteiligung {
+    stroke: #d1820e
+}
+path.line {
+    fill: none;
+    stroke-width: 2px;
+}

@@ -18,13 +18,11 @@ function convertLabel(label) {
 }
 
 d3.json('js/data/d3_distance_result_data.json').then(function(d) {
+    // console.log(d);
 
-    //const selectedYear = 2017;
-
-    console.log(d)
     let years = d.map(d => d.year);
     let yearData = d.filter(d => d.year === years[0])[0];
-    console.log(yearData)
+    //console.log(yearData);
 
     let distancesData = d.map(yearData => {
             let distances = yearData.distances.map(distances => distances.distance)
@@ -173,7 +171,6 @@ d3.json('js/data/d3_distance_result_data.json').then(function(d) {
             let selectedValue = this.value;
             let year = years[selectedValue]
             yearData = d.filter(d => d.year === year)[0];
-            console.log(yearData);
             refresh(yearData)
         });
 
@@ -191,20 +188,17 @@ d3.json('js/data/d3_distance_result_data.json').then(function(d) {
 
 
     function refresh(yearData) {
-        console.log('refresh', yearData.distances)
         bar.data(yearData.distances)
             .classed('coalition', function (d) {
                 return d.coalition
             });
 
-        console.log(bar);
         //left
         leftBarsGroups.select('rect')
             .data(yearData.distances)
             .transition()
             .duration(1000)
-            .attr('width', function (d, i) {
-                console.log('rect', i, d);
+            .attr('width', function (d) {
                 return xScale(d.distance)
             })
             .attr('height', barWidth-gap)
@@ -213,25 +207,6 @@ d3.json('js/data/d3_distance_result_data.json').then(function(d) {
 
             });
 
-
-        /*leftBarsGroups.select('text')
-            .data(yearData.distances)
-            .enter()
-            .transition()
-            .duration(1000)
-            .attr('x', function(d) {
-                console.log('text', d);
-                if (d) {
-                    bbox = this.parentNode.firstChild.getBBox();
-                    return bbox.x + bbox.width/2
-                }
-            })
-            .attr('y', function(d) {
-                if(d) {
-                    bbox = this.parentNode.firstChild.getBBox();
-                    return bbox.y + bbox.height/1.5
-                }
-            });*/
 
 
         // right bars
@@ -247,23 +222,6 @@ d3.json('js/data/d3_distance_result_data.json').then(function(d) {
                 return (width/2+margin.left+(labelGap/2))
 
             });
-
-        /*rightBarsGroups.select('text')
-            .data(yearData.distances)
-            .transition()
-            .duration(1000)
-            .attr('x', function(d) {
-                if (d) {
-                    bbox = this.parentNode.firstChild.getBBox();
-                    return bbox.x + bbox.width/2
-                }
-            })
-            .attr('y', function(d) {
-                if(d) {
-                    bbox = this.parentNode.firstChild.getBBox();
-                    return bbox.y + bbox.height/1.5
-                }
-            });*/
     }
 
 });

@@ -44,5 +44,7 @@ rect.afd {
 
 
 #mySlider {
-    width: 600px;
+    width: 565px;
+    transform: translate(26px, -5px);
 }
+

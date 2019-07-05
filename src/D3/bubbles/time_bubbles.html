@@ -265,7 +265,8 @@ d3.json("time_bubbles.json", function(data) {
 		  .duration(20)
 		tooltip
 		  .style("opacity", 1)
-		  .html(d.word)
+		  //.html(d.word)
+		  .html(data.parties[data.parties.findIndex(obj => obj.slug==d.party)].name+" | "+d.word)
 		  .style("left", (d3.mouse(this)[0]+30) + "px")
 		  .style("top", (d3.mouse(this)[1]+30) + "px")
 	}

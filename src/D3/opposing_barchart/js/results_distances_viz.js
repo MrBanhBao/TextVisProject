@@ -230,6 +230,8 @@ d3.json('js/data/d3_distance_result_data2.json').then(function(d) {
         ////////////////////////////////////////
     **/
 
+
+
      let marginResults = {top: 10, right: 0, bottom: 18, left: 20};
     let widthResults = 620 - marginResults.left - marginResults.right,
         heightResults = 250 - marginResults.top - marginResults.bottom;
@@ -275,8 +277,7 @@ d3.json('js/data/d3_distance_result_data2.json').then(function(d) {
         })
         .entries(results);
 
-
-    console.log(nest)
+    // !!!!! LINE CHART !!!!!!!
     function refreshLineChart(selectedYear) {
         // Define the line
         console.log("yes")
@@ -305,7 +306,7 @@ d3.json('js/data/d3_distance_result_data2.json').then(function(d) {
                 return valueLine(dFilteredValues);
             });
 
-        svgResults.selectAll(".dot").remove();
+        //svgResults.selectAll(".dot").remove();
 
         let dFilteredValues = results.filter(function (d) {
                     return d.year <= selectedYear
@@ -322,6 +323,8 @@ d3.json('js/data/d3_distance_result_data2.json').then(function(d) {
             })
             .attr("cx", function(d) { return xScaleLines(d.year) + marginResults.left + 15 } )
             .attr("cy", function(d) { return yScaleLines(d.result) } )
+            .transition()
+            .duration(400)
             .attr("r", 4)
 
     }

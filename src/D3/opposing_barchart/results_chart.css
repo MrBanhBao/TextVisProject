@@ -25,7 +25,37 @@ path.afd {
 path.wahlbeteiligung {
     stroke: #d1820e
 }
+
 path.line {
     fill: none;
     stroke-width: 3px;
+}
+
+
+circle.cducsu {
+    fill: #343434
+}
+
+circle.spd {
+    fill: #cc0000
+}
+
+circle.fdp {
+    fill: #ffe14e
+}
+
+circle.linke {
+    fill: #9b31ab
+}
+
+circle.gruene {
+    fill: #029e00
+}
+
+circle.afd {
+    fill: #3ca4d2
+}
+
+circle.wahlbeteiligung {
+    fill: #d1820e
 }

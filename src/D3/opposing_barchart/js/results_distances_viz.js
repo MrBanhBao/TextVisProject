@@ -299,13 +299,31 @@ d3.json('js/data/d3_distance_result_data2.json').then(function(d) {
                 return 'line ' + d.key.toLowerCase()
             })
             .attr("d", function (d) {
-                console.log(d)
                 let dFilteredValues = d.values.filter(function (d) {
                     return d.year <= selectedYear
                 });
-                console.log(dFilteredValues);
                 return valueLine(dFilteredValues);
             });
+
+        svgResults.selectAll(".dot").remove();
+
+        let dFilteredValues = results.filter(function (d) {
+                    return d.year <= selectedYear
+                });
+
+        svgResults
+            .append("g")
+            .selectAll("dot")
+            .data(dFilteredValues)
+            .enter()
+            .append("circle")
+            .attr("class", function (d) {
+                return 'dot ' + d.party.toLowerCase()
+            })
+            .attr("cx", function(d) { return xScaleLines(d.year) + marginResults.left + 15 } )
+            .attr("cy", function(d) { return yScaleLines(d.result) } )
+            .attr("r", 4)
+
     }
 
     // Slider
@@ -317,4 +335,5 @@ d3.json('js/data/d3_distance_result_data2.json').then(function(d) {
             refreshLineChart(year);
             refreshOpposingBars(yearData)
         });
+    refreshLineChart(years[0])
 });

@@ -306,11 +306,12 @@ d3.json('js/data/d3_distance_result_data2.json').then(function(d) {
                 return valueLine(dFilteredValues);
             });
 
-        //svgResults.selectAll(".dot").remove();
 
         let dFilteredValues = results.filter(function (d) {
                     return d.year <= selectedYear
                 });
+
+        svgResults.selectAll(".dot").remove();
 
         svgResults
             .append("g")
@@ -323,8 +324,8 @@ d3.json('js/data/d3_distance_result_data2.json').then(function(d) {
             })
             .attr("cx", function(d) { return xScaleLines(d.year) + marginResults.left + 15 } )
             .attr("cy", function(d) { return yScaleLines(d.result) } )
-            .transition()
-            .duration(400)
+            //.transition()
+            //.duration(400)
             .attr("r", 4)
 
     }

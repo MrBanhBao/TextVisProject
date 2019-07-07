@@ -181,6 +181,19 @@ d3.json('js/data/d3_distance_result_data2.json').then(function(d) {
         .attr('transform', 'translate('+ (widthOpposingBars/2+labelGap/2+(marginOpposingBars.left-1)) +','+ (heightOpposingBars-marginOpposingBars.bottom) +')')
         .call(xAxisRightTicks);
 
+    // Legend and Infos
+    let coalitionG = svgOpposingBar.append('g').attr('class', 'coal-legend');
+    coalitionG.append('rect').attr('width', '15').attr('height', '12') ;
+    coalitionG.append('text').text(': in coalition');
+
+    svgOpposingBar.append('text')
+        .attr('class', 'opp-info-text upper')
+        .text('*small distance: similar');
+
+    svgOpposingBar.append('text')
+        .attr('class', 'opp-info-text lower')
+        .text('*high distance: dissimilar');
+
 
     function refreshOpposingBars(yearData) {
         bar.data(yearData.distances)
@@ -280,7 +293,6 @@ d3.json('js/data/d3_distance_result_data2.json').then(function(d) {
     // !!!!! LINE CHART !!!!!!!
     function refreshLineChart(selectedYear) {
         // Define the line
-        console.log("yes")
         let valueLine = d3.line()
             .x(function (d) {
                 return xScaleLines(d.year) + marginResults.left + 15;
@@ -327,8 +339,10 @@ d3.json('js/data/d3_distance_result_data2.json').then(function(d) {
             //.transition()
             //.duration(400)
             .attr("r", 4)
-
     }
+
+
+    /// BAR CHART
 
     // Slider
     d3.select("#mySlider")

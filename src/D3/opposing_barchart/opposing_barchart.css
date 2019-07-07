@@ -48,3 +48,35 @@ rect.afd {
     transform: translate(26px, -5px);
 }
 
+h1 {
+    font-family: "Helvetica", serif;
+    font-size: 11px;
+}
+
+text.opp-info-text.upper{
+    font-family: "Helvetica", serif;
+    font-size: 10px;
+    transform: translate(490px, 315px);
+}
+
+text.opp-info-text.lower{
+    font-family: "Helvetica", serif;
+    font-size: 10px;
+    transform: translate(490px, 330px);
+}
+
+.coal-legend {
+    transform: translate(493px, 290px);
+}
+
+.coal-legend rect {
+    stroke: #88ff8a;
+    stroke-width: 2px;
+    fill: darkgrey;
+}
+.coal-legend text {
+    transform: translate(18px, 10px);
+    font-size: 10px;
+    font-family: "Helvetica", serif;
+}
+

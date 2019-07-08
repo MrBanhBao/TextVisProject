@@ -109,7 +109,7 @@ d3.json("readability.json", function(data) {
           .attr('y', 10)
           .text(function(d) { return d.name; })
           .style("fill", function(d){ return myColor(d.name) })
-          .style("font-size", 5)
+          .attr("font-size", 20)
 		  .attr("stroke-width", 0.2)
 		  .attr('stroke', 'black')
         .on("click", function(d){

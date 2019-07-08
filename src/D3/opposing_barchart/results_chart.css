@@ -31,6 +31,14 @@ path.line {
     stroke-width: 3px;
 }
 
+.line {
+    opacity: 0.8;
+}
+
+.dot {
+    opacity: 0.8;
+}
+
 
 circle.cducsu {
     fill: #343434
@@ -58,4 +66,12 @@ circle.afd {
 
 circle.wahlbeteiligung {
     fill: #d1820e
+}
+
+.resBar {
+    opacity: 0.7;
+}
+
+.resBar.wahlbeteiligung {
+    display: none;
 }

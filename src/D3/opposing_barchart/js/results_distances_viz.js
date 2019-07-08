@@ -20,8 +20,11 @@ function convertLabel(label) {
 d3.json('js/data/d3_distance_result_data2.json').then(function(d) {
     let results = d.flatMap(d => d.results);
     let years = d.map(d => d.year);
-    let yearData = d.filter(d => d.year === years[0])[0];
+    let parties = d[0].results.map(d => d.party.toLowerCase());
 
+    let yearData = d.filter(d => d.year === years[0])[0];
+    console.log(yearData)
+    console.log(parties)
 
     /***
         /////////////////////////////////////////
@@ -327,6 +330,7 @@ d3.json('js/data/d3_distance_result_data2.json').then(function(d) {
 
         svgResults
             .append("g")
+            .attr("class", "dots")
             .selectAll("dot")
             .data(dFilteredValues)
             .enter()
@@ -343,15 +347,108 @@ d3.json('js/data/d3_distance_result_data2.json').then(function(d) {
 
 
     /// BAR CHART
+    let xScaleResBars = d3.scaleBand()
+        .domain(parties)
+        .paddingInner(.1)
+        .paddingOuter(.1)
+        .range([0, widthResults/3]);
+
+    let barChart = svgResults.append('g')
+        .attr('transform', 'translate(' + (widthResults / 3 + 15 + marginResults.left) + ',' + 0 + ')')
+        .attr('class', 'resBars')
+        .selectAll('.resBar')
+        .data(yearData.results)
+        .enter()
+        .append('rect')
+        .attr('class', function (d) {
+            return 'resBar ' + d.party.toLowerCase()
+        })
+        .transition()
+        .attr('width', function (d) {
+            return xScaleResBars.bandwidth();
+        })
+        .attr('height', function (d) {
+            return 0;
+        })
+        .attr('x', function (d) {
+            //console.log('xbars', xScaleResBars(d.party.toLowerCase()));
+            return xScaleResBars(d.party.toLowerCase());
+        })
+        .attr('y', function (d) {
+            return heightResults - marginResults.bottom
+        });
+
+    barChart
+        .transition()
+        .duration(500)
+        .attr('y', function (d) {
+            return yScaleLines(d.result)
+        })
+        .attr('height', function (d) {
+            console.log("height", d.party, yScaleLines(d.result));
+            if (d.result) {
+                return heightResults - yScaleLines(d.result) - marginResults.bottom;
+            } else {
+                return 0;
+            }
+        });
+
+    function refreshResBarChart(yearData) {
+        console.log(yearData);
+        //svgResults.selectAll('.resBars').remove();
+        //let t = svgResults.select('g.resBars').data(yearData);
+        //let t = svgResults.selectAll('resBars').data(yearData.results);
+        //console.log(t);
+
+
+        let bars = svgResults.select('.resBars');
+        console.log(bars);
+        console.log(bars.selectAll('rect'))
+
+        bars.selectAll('rect')
+            .data(yearData.results)
+            .transition()
+            .duration(400)
+            .attr('y', function(d) {
+                console.log('update', d);
+                return yScaleLines(d.result)
+            })
+            .attr('height', function(d) {
+                console.log("height", d.party, yScaleLines(d.result));
+                if(d.result) {
+                    return heightResults-yScaleLines(d.result)-marginResults.bottom;
+                } else {
+                    return 0;
+                }
+            })
+        // barChart
+        //     .data(yearData)
+        //     .transition()
+        //     .duration(500)
+        //     .attr('y', function(d) {
+        //         console.log('update', d);
+        //         return yScaleLines(d.result)
+        //     })
+        //     .attr('height', function(d) {
+        //         console.log("height", d.party, yScaleLines(d.result));
+        //         if(d.result) {
+        //             return heightResults-yScaleLines(d.result)-marginResults.bottom;
+        //         } else {
+        //             return 0;
+        //         }
+        //     });
+    }
 
     // Slider
     d3.select("#mySlider")
         .on("change", function(){
             let selectedValue = this.value;
-            let year = years[selectedValue]
+            let year = years[selectedValue];
             yearData = d.filter(d => d.year === year)[0];
+            refreshResBarChart(yearData);
             refreshLineChart(year);
-            refreshOpposingBars(yearData)
+            refreshOpposingBars(yearData);
         });
-    refreshLineChart(years[0])
+    //refreshResBarChart(yearData);
+    refreshLineChart(years[0]);
 });

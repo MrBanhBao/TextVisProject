@@ -140,7 +140,7 @@ d3.json("manifesto_bubbles.json", function(data) {
 	  
     tooltip
       .style("opacity", 1)
-      .html(d.year+'|'+data.parties[data.parties.findIndex(obj => obj.slug==d.party)].name)
+      .html(d.label+'|'+data.parties[data.parties.findIndex(obj => obj.slug==d.dominantParty)].name)
       .style("left", (d3.mouse(this)[0]+30) + "px")
       .style("top", (d3.mouse(this)[1]+30) + "px")
   }
@@ -199,7 +199,7 @@ d3.json("manifesto_bubbles.json", function(data) {
 	selectedGroup=selectedGroup.toLowerCase()
       // Create new data with the selection?
       //var dataFilter = data.map(function(d){return {year: d.year, value:d[selectedGroup]} })
-	  var dataFilter = data.bubbles.map(function(d){return {year: d.year,party: d.party,x: d.x[selectedGroup], y: d.y[selectedGroup]} })
+	  var dataFilter = data.bubbles.map(function(d){return {label: d.label,dominantParty: d.dominantParty,x: d.x[selectedGroup], y: d.y[selectedGroup]} })
 	  
 	  
 
@@ -240,11 +240,11 @@ d3.json("manifesto_bubbles.json", function(data) {
       .attr("class", function(d) { return "bubbles " + d.party })
       .attr("cx", function (d) { return x(d.x.umap); } )
       .attr("cy", function (d) { return y(d.y.umap); } )
-      .attr("r", function (d) { return (d.size); } )
+      .attr("r", function (d) { return (d.size["1949"]); } )
       //.style("fill", function (d) { return d.color; } )
 	  .style("fill", function(d){ 
 	  //console.log(d.party,myColor(d.party))
-	  return myColor(d.party)} )
+	  return myColor(d.dominantParty)} )
 	  .style("stroke", "white")
     // -3- Trigger the functions for hover
     .on("mouseover", showTooltip )
@@ -258,16 +258,16 @@ d3.json("manifesto_bubbles.json", function(data) {
       .data(data.bubbles)
       .enter()
       .append("text")
-		.attr("class", function(d) { return "labels " + d.party })
+		.attr("class", function(d) { return "labels " + d.dominantParty })
         .attr("x", function (d) { return x(d.x.umap); })
         .attr("y", function (d) { return y(d.y.umap); })
 		.attr("stroke-width", 0.2)
 		.attr("stroke", "#000000")
-		.style("fill", function(d){return myColor(d.party)})
+		.style("fill", function(d){return myColor(d.dominantParty)})
         //.style("fill", function(d){ return d.fontcolor;})
 		.attr("font-family", "sans-serif")
-		.attr("font-size", function (d) { return (d.fontSize); } )
-        .text(function(d){ return d.year})
+		.attr("font-size", 12 )
+        .text(function(d){ return d.label})
         .attr("text-anchor", "left")
         .style("alignment-baseline", "middle")
     // -3- Trigger the functions for hover

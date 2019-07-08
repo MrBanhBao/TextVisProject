@@ -45,15 +45,11 @@
 
 <!-- A bit of CSS: change stroke color of circle on hover (white -> black) -->
 <style>
-
-
-
 .bubbles {
   stroke-width: 1px;
   stroke: black;
   opacity: .8
 }
-
 .bubbles:hover {
   stroke: black;
 }
@@ -63,27 +59,20 @@
     stroke-width: 0.2px;
     font-weight: 100;
 }
-
 .labels:hover {
-
 }
-
 .year.label {
   font: 500 196px "Helvetica Neue";
   fill: #aaa;
 }
-
-
 </style>
 
 
 <script>
-
 // set the dimensions and margins of the graph
 var margin = {top: 40, right: 150, bottom: 60, left: 30},
     width = 1000 - margin.left - margin.right,
     height = 800 - margin.top - margin.bottom;
-
 // append the svg object to the body of the page
 var svg = d3.select("#my_dataviz")
   .append("svg")
@@ -92,19 +81,15 @@ var svg = d3.select("#my_dataviz")
   .append("g")
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
-
 	var year_label = svg.append("text")
     .attr("class", "year label")
     .attr("text-anchor", "end")
     .attr("y", height - 24)
     .attr("x", width)
     .text(1983);
-
-
 //Read the data
 //d3.csv("bubbles_data4.csv", function(data) {
 d3.json("time_bubbles.json", function(data) {
-
 	// ---------------------------//
 	//       SCALE  AND  AXIS     //
 	// ---------------------------//
@@ -114,7 +99,6 @@ d3.json("time_bubbles.json", function(data) {
 	var yScale = d3.scaleLinear()
 	  .domain([-5, 105])
 	  .range([height, 0]);	
-
 	  // Add a scale for bubble size
 	var z = d3.scaleLinear()
 		.domain([0, 100])
@@ -124,7 +108,6 @@ d3.json("time_bubbles.json", function(data) {
 	var w = d3.scaleLinear()
 		.domain([0, 100])
 		.range([ 0, 40]);
-
 	  // Add a scale for bubble color
 	var myColor = d3.scaleOrdinal()
 		.domain(["afd", "union","gruene", "fdp", "linke", "spd","none"])
@@ -145,7 +128,6 @@ d3.json("time_bubbles.json", function(data) {
 	  .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 	  .call(yAxis);
 	  
-
   // ---------------------------//
   //       PAN  AND ZOOM        //
   // ---------------------------//
@@ -169,7 +151,6 @@ d3.json("time_bubbles.json", function(data) {
 		var new_xScale = d3.event.transform.rescaleX(xScale);
 		var new_yScale = d3.event.transform.rescaleY(yScale);
 		// update axes
-
 		//var selectedOption = d3.select("#selectButton").property("value").toLowerCase()
 		
 		var dataFilter = filteredData()//data.bubbles.map(function(d){return {x: d.x[selectedOption], y: d.y[selectedOption]} })
@@ -186,7 +167,6 @@ d3.json("time_bubbles.json", function(data) {
 		xLastZoomed=new_xScale
 		yLastZoomed=new_yScale
 }
-
 	svg.append("rect")
 		.attr("width", width)
 		.attr("height", height)
@@ -195,7 +175,6 @@ d3.json("time_bubbles.json", function(data) {
 		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 		.call(zoom);
 	
-
   // ---------------------------//
   //       DATA-MAP             //
   // ---------------------------//
@@ -225,27 +204,25 @@ d3.json("time_bubbles.json", function(data) {
 		year_label.text(choosen_year);
 		var selectedOption = d3.select("#selectButton").property("value").toLowerCase()
 		var selectedMode = d3.select("#modeButton").property("value")
-
 		if (selectedMode=="Mixed"){
-			return data.bubbles.map(function(d){return {word: d.word, party: d.parties[choosen_year], x: d.x[selectedOption], y: d.y[selectedOption], size: d.sizes[choosen_year], fontsize: d.sizes[choosen_year]} })
+			return data.bubbles.map(function(d){return {label: d.label, party: d.party[choosen_year], x: d.x[selectedOption], y: d.y[selectedOption], size: d.size[choosen_year], fontsize: d.size[choosen_year]} })
 		}
 		if (selectedMode=="None"){
 			//return data.map(function(d){return {fontsize: 30, size: 0} })
-			return data.bubbles.map(function(d){return {word: d.word, party: d.parties[choosen_year], x: d.x[selectedOption], y: d.y[selectedOption], size: 0, fontsize: 30} })
+			return data.bubbles.map(function(d){return {label: d.label, party: d.party[choosen_year], x: d.x[selectedOption], y: d.y[selectedOption], size: 0, fontsize: 30} })
 		}
 		
 		if (selectedMode=="WordCloud"){
 			//return data.map(function(d){return {fontsize: d["size_"+choosen_year]*3, size: 0} })
-			return data.bubbles.map(function(d){return {word: d.word, party: d.parties[choosen_year], x: d.x[selectedOption], y: d.y[selectedOption], size: 0, fontsize: d.sizes[choosen_year]*3} })
+			return data.bubbles.map(function(d){return {label: d.label, party: d.party[choosen_year], x: d.x[selectedOption], y: d.y[selectedOption], size: 0, fontsize: d.size[choosen_year]*3} })
 		}
 		//return data.map(function(d){return {fontsize: d.size, size: d.size} })
-		return data.bubbles.map(function(d){return {word: d.word, party: d.parties[choosen_year], x: d[selectedOption], y: d.y[selectedOption], size: 0, fontsize: d.sizes[choosen_year]*3} })
+		return data.bubbles.map(function(d){return {label: d.label, party: d.party[choosen_year], x: d[selectedOption], y: d.y[selectedOption], size: 0, fontsize: d.size[choosen_year]*3} })
 	}
 	
   // ---------------------------//
   //      TOOLTIP               //
   // ---------------------------//
-
 	// -1- Create a tooltip div that is hidden by default:
 	var tooltip = d3.select("#my_dataviz")
 		.append("div")
@@ -257,7 +234,6 @@ d3.json("time_bubbles.json", function(data) {
 		  .style("color", "white")
 		  .style("position", "absolute")
 		  
-
 	// -2- Create 3 functions to show / update (when mouse move but stay on same circle) / hide the tooltip
 	var showTooltip = function(d) {
 		tooltip
@@ -265,8 +241,8 @@ d3.json("time_bubbles.json", function(data) {
 		  .duration(20)
 		tooltip
 		  .style("opacity", 1)
-		  //.html(d.word)
-		  .html(data.parties[data.parties.findIndex(obj => obj.slug==d.party)].name+" | "+d.word)
+		  //.html(d.label)
+		  .html(data.parties[data.parties.findIndex(obj => obj.slug==d.party)].name+" | "+d.label)
 		  .style("left", (d3.mouse(this)[0]+30) + "px")
 		  .style("top", (d3.mouse(this)[1]+30) + "px")
 	}
@@ -281,7 +257,6 @@ d3.json("time_bubbles.json", function(data) {
 		  .duration(1000)
 		  .style("opacity", 0)
 	}
-
 	var clicked=false
 	var clickElement = function(d) {
 		if (clicked){
@@ -303,7 +278,6 @@ d3.json("time_bubbles.json", function(data) {
 	  // ---------------------------//
   //       HIGHLIGHT GROUP      //
   // ---------------------------//
-
   // What to do when one group is hovered
   var highlight = function(d){
     // reduce opacity of all groups
@@ -312,21 +286,18 @@ d3.json("time_bubbles.json", function(data) {
     // expect the one that is hovered
     d3.selectAll("."+d.slug).style("opacity", 0.8)
   }
-
   // And when it is not hovered anymore
   var noHighlight = function(d){
     d3.selectAll(".bubbles").style("opacity", 0.8)
 	d3.selectAll(".labels").style("opacity", 0.9)
   }
-
-
 	// ---------------------------//
     //       Visuals              //
     // ---------------------------//
-
 	// Add dots
 	  
 	var dataFilter=filteredData()
+	console.log(data)
 	var dot= svg.append('g')
 		.selectAll("dot")
 		.data(dataFilter)
@@ -344,8 +315,6 @@ d3.json("time_bubbles.json", function(data) {
 		.on("mouseleave", hideTooltip )
 		.on("click", clickElement)
 		//.on("dblclick", dblClickElement)
-
-
 	// Add labels
 	var label=svg.append('g')
 	  .selectAll("textlabel")
@@ -360,7 +329,7 @@ d3.json("time_bubbles.json", function(data) {
         .style("fill", function(d){ return myColor(d.party);})
 		.attr("font-family", "sans-serif")
 		.attr("font-size", function (d) { return w(d.size); } )
-        .text(function(d){return d.word})
+        .text(function(d){return d.label})
         .attr("text-anchor", "left")
         .style("alignment-baseline", "middle")
 	  // -3- Trigger the functions for hover
@@ -369,24 +338,18 @@ d3.json("time_bubbles.json", function(data) {
 	  .on("mouseleave", hideTooltip )
 	  .on("click", clickElement)
 	  .on("dblclick", dblClickElement)
-
   
-
-
-
   // ---------------------------//
   //           BUTTONS           //
   // ---------------------------//
 	
-
     // A function that update the chart
     function update(selectedGroup) {
       // Create new data with the selection?
       //var dataFilter = data.map(function(d){return {year: d.year, value:d[selectedGroup]} })
 	  //var dataFilter = data.map(function(d){return {label: d.label,party: d.party,dim11: d[dim1], dim12: d[dim2]} })
 	  selectedGroup=selectedGroup.toLowerCase()
-	  var dataFilter = filteredData()//data.bubbles.map(function(d){return {word: d.word,party: d.dominantParty,x: d.x[selectedGroup], y: d.y[selectedGroup]} })	  
-
+	  var dataFilter = filteredData()//data.bubbles.map(function(d){return {label: d.label,party: d.dominantParty,x: d.x[selectedGroup], y: d.y[selectedGroup]} })	  
       dot
         .data(dataFilter)
         .transition()
@@ -477,11 +440,9 @@ d3.json("time_bubbles.json", function(data) {
 		updateChart(selectedValue)
 	})
 	
-
     // ---------------------------//
     //       LEGEND              //
     // ---------------------------//
-
     // Add legend: circles
     var valuesToShow = [5, 50, 100]
     var xCircle = 850
@@ -496,7 +457,6 @@ d3.json("time_bubbles.json", function(data) {
         .attr("r", function(d){ return z(d) })
         .style("fill", "none")
         .attr("stroke", "black")
-
     // Add legend: segments
     svg
       .selectAll("legend")
@@ -509,7 +469,6 @@ d3.json("time_bubbles.json", function(data) {
         .attr('y2', function(d){ return height - 100 - z(d) } )
         .attr('stroke', 'black')
         .style('stroke-dasharray', ('2,2'))
-
     // Add legend: labels
     svg
       .selectAll("legend")
@@ -521,14 +480,12 @@ d3.json("time_bubbles.json", function(data) {
         .text( function(d){ return d } )
         .style("font-size", 10)
         .attr('alignment-baseline', 'middle')
-
     // Legend title
     svg.append("text")
       .attr('x', xCircle)
       .attr("y", height - 100 +30)
       .text("TF-IDF-Score")
       .attr("text-anchor", "middle")
-
     // Add one dot in the legend for each name.
     var size = 20
 	var hightlighted=false
@@ -544,7 +501,6 @@ d3.json("time_bubbles.json", function(data) {
         .on("mouseover", highlight)
         .on("mouseleave", noHighlight)
 		
-
     // Add labels beside legend dots
     svg.selectAll("mylabels")
       .data(allgroups)
@@ -561,7 +517,6 @@ d3.json("time_bubbles.json", function(data) {
         .on("mouseover", highlight)
         .on("mouseleave", noHighlight)
 		
-
   })
   
   function deUmlaut(value){

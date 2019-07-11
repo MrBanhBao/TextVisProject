@@ -170,7 +170,7 @@ d3.json('js/data/d3_distance_result_data2.json').then(function(d) {
 
     //Interactive
     bar.on('mouseover', highlight('highlight bar'))
-        .on('mouseout', highlight('bar'))
+        .on('mouseout', highlight('bar'));
 
 
     // Guides
@@ -248,7 +248,7 @@ d3.json('js/data/d3_distance_result_data2.json').then(function(d) {
 
 
 
-     let marginResults = {top: 10, right: 0, bottom: 18, left: 20};
+     let marginResults = {top: 20, right: 0, bottom: 18, left: 20};
     let widthResults = 620 - marginResults.left - marginResults.right,
         heightResults = 250 - marginResults.top - marginResults.bottom;
 
@@ -257,7 +257,7 @@ d3.json('js/data/d3_distance_result_data2.json').then(function(d) {
     let svgResults = d3.select('#topvis')
         .append('svg')
         .attr('width', widthResults)
-        .attr('height', heightResults);
+        .attr('height', heightResults+10);
 
 
     // Axis
@@ -278,12 +278,12 @@ d3.json('js/data/d3_distance_result_data2.json').then(function(d) {
     // Guides
     let xGuideResults = d3.select('#topvis svg')
         .append('g')
-        .attr('transform', 'translate(' + (marginResults.left) + ',' + (heightResults-marginResults.bottom) +')')
+        .attr('transform', 'translate(' + (marginResults.left) + ',' + (heightResults - marginResults.bottom + 10) +')')
         .call(xTicks);
 
     let yGuideResults = d3.select('#topvis svg')
         .append('g')
-        .attr('transform', 'translate('+ (marginResults.left+10) + ',' + (marginResults.top-10) +')')
+        .attr('transform', 'translate('+ (marginResults.left+9) + ',' + (marginResults.top-10) +')')
         .call(yTicks);
 
 
@@ -301,7 +301,7 @@ d3.json('js/data/d3_distance_result_data2.json').then(function(d) {
                 return xScaleLines(d.year) + marginResults.left + 15;
             })
             .y(function (d) {
-                return yScaleLines(d.result);
+                return yScaleLines(d.result)+10;
             });
 
         svgResults.selectAll(".line").remove();
@@ -339,7 +339,7 @@ d3.json('js/data/d3_distance_result_data2.json').then(function(d) {
                 return 'dot ' + d.party.toLowerCase()
             })
             .attr("cx", function(d) { return xScaleLines(d.year) + marginResults.left + 15 } )
-            .attr("cy", function(d) { return yScaleLines(d.result) } )
+            .attr("cy", function(d) { return yScaleLines(d.result) + 10 } )
             //.transition()
             //.duration(400)
             .attr("r", 4)
@@ -375,7 +375,7 @@ d3.json('js/data/d3_distance_result_data2.json').then(function(d) {
             return xScaleResBars(d.party.toLowerCase());
         })
         .attr('y', function (d) {
-            return heightResults - marginResults.bottom
+            return heightResults - marginResults.bottom + 10
         });
 
     barChart
@@ -387,7 +387,7 @@ d3.json('js/data/d3_distance_result_data2.json').then(function(d) {
         .attr('height', function (d) {
             console.log("height", d.party, yScaleLines(d.result));
             if (d.result) {
-                return heightResults - yScaleLines(d.result) - marginResults.bottom;
+                return heightResults - yScaleLines(d.result) - marginResults.bottom + 10;
             } else {
                 return 0;
             }
@@ -416,7 +416,7 @@ d3.json('js/data/d3_distance_result_data2.json').then(function(d) {
             .attr('height', function(d) {
                 console.log("height", d.party, yScaleLines(d.result));
                 if(d.result) {
-                    return heightResults-yScaleLines(d.result)-marginResults.bottom;
+                    return heightResults-yScaleLines(d.result)-marginResults.bottom + 10;
                 } else {
                     return 0;
                 }

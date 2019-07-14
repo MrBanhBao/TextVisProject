@@ -69,8 +69,8 @@ d3.json('js/data/topics_data2.json').then(function (d) {
     let topics = d.data.flatMap(d => d.topics)
     let topicMapping = d.topic_mapping;
 
-    let partyA = 'SPD',
-        partyB = 'CDUCSU';
+    let partyA = 'Linke',
+        partyB = 'SPD';
 
     //let selectedPartyTopics = d.data.flatMap(d => d.topics.filter(topic => topic.party_name.toLowerCase() === partyA.toLowerCase() ||
     //    topic.party_name.toLowerCase() === partyB.toLowerCase()));
@@ -184,7 +184,6 @@ d3.json('js/data/topics_data2.json').then(function (d) {
         .on('mouseover', function (d) {
             let tip = d3.select('.tooltip').node();
             let textElement = d3.select(this).node();
-            console.log(tip)
             tooltip
                 .text(topicMapping[d])
                 .style('display', 'inline')
@@ -197,7 +196,6 @@ d3.json('js/data/topics_data2.json').then(function (d) {
         });
      // left bars
     let leftTopicsData = getFilteredTopics(topics, years[0], partyA)[0];
-    console.log(leftTopicsData)
 
     let leftBarsGroups = bar.append('g')
         .attr('class', 'left-bar');
@@ -206,18 +204,25 @@ d3.json('js/data/topics_data2.json').then(function (d) {
     leftBarsGroups.append('rect')
         .attr('class', partyA.toLowerCase())
         .attr('width', function (d) {
-            return xScaleOppoBarChart(leftTopicsData[d])
+            if(leftTopicsData) {
+                return xScaleOppoBarChart(leftTopicsData[d])
+            } else {
+                return 0
+            }
         })
         .attr('height', barWidth-gap)
         .attr('x', function(d) {
-            return (widthOpposingBars/2+marginOpposingBars.left-(labelGap/2))-xScaleOppoBarChart(leftTopicsData[d])
-
+            if(leftTopicsData) {
+                return (widthOpposingBars/2+marginOpposingBars.left-(labelGap/2))-xScaleOppoBarChart(leftTopicsData[d])
+            }
         });
 
     leftBarsGroups.append('text')
         .attr('class', 'left barvalue')
         .attr('x', function(d) {
-            return (widthOpposingBars/2+marginOpposingBars.left-(labelGap/2))-xScaleOppoBarChart(leftTopicsData[d]) -5
+            if(leftTopicsData) {
+                return (widthOpposingBars/2+marginOpposingBars.left-(labelGap/2))-xScaleOppoBarChart(leftTopicsData[d]) -5
+            }
         })
         .attr('y', function(d) {
             bbox = this.parentNode.firstChild.getBBox();
@@ -239,30 +244,109 @@ d3.json('js/data/topics_data2.json').then(function (d) {
 
 
     rightBarsGroups.append('rect')
-        .attr('class', partyB)
+        .attr('class', partyB.toLowerCase())
         .attr('width', function (d) {
-            return xScaleOppoBarChart(rightTopicsData[d]);
+            if (rightTopicsData) {
+                return xScaleOppoBarChart(rightTopicsData[d]);
+            } else {
+                return 0
+            }
         })
         .attr('height', barWidth-gap)
         .attr('x', function(d) {
             return (widthOpposingBars/2+marginOpposingBars.left+(labelGap/2))
-
         });
 
     rightBarsGroups.append('text')
         .attr('class', 'right barvalue')
         .attr('x', function(d) {
-            return (widthOpposingBars/2+marginOpposingBars.left+(labelGap/2)) + xScaleOppoBarChart(rightTopicsData[d]) + 5;
+            if (rightTopicsData) {
+                return (widthOpposingBars/2+marginOpposingBars.left+(labelGap/2)) + xScaleOppoBarChart(rightTopicsData[d]) + 5;
+            }
         })
         .attr('y', function(d) {
             bbox = this.parentNode.firstChild.getBBox();
             return bbox.y + 12.5
         })
         .text(function (d) {
-            if (rightTopicsData[d] != 0) {
+            if (rightTopicsData && rightTopicsData[d] != 0) {
                 return rightTopicsData[d].toFixed(2);
             }
         });
+
+    function refreshOpposingBars(leftTopicsData, rightTopicsData) {
+        //left
+        leftBarsGroups.select('rect')
+            .data(topTopics)
+            .transition()
+            .duration(1000)
+            .attr('width', function (d) {
+                if(leftTopicsData) {
+                    return xScaleOppoBarChart(leftTopicsData[d])
+                } else {
+                    return 0
+                }
+            })
+            .attr('height', barWidth-gap)
+            .attr('x', function(d) {
+                if(leftTopicsData) {
+                    return (widthOpposingBars/2+marginOpposingBars.left-(labelGap/2))-xScaleOppoBarChart(leftTopicsData[d])
+                } else {
+                    return (widthOpposingBars/2+marginOpposingBars.left-(labelGap/2))
+                }
+            });
+
+        leftBarsGroups.select('text')
+        .attr('class', 'left barvalue')
+        .attr('x', function(d) {
+            if(leftTopicsData) {
+                return (widthOpposingBars/2+marginOpposingBars.left-(labelGap/2))-xScaleOppoBarChart(leftTopicsData[d]) -5
+            }
+        })
+        .attr('y', function(d) {
+            bbox = this.parentNode.firstChild.getBBox();
+            return bbox.y + 12.5
+        })
+        .text(function (d) {
+            if (leftTopicsData && leftTopicsData[d] != 0) {
+                return leftTopicsData[d].toFixed(2);
+            }
+        });
+
+        // right bars
+        rightBarsGroups.select('rect')
+            .data(topTopics)
+            .transition()
+            .duration(1000)
+            .attr('width', function (d, i) {
+                if(rightTopicsData) {
+                    return xScaleOppoBarChart(rightTopicsData[d]);
+                } else {
+                    return 0
+                }
+            })
+            .attr('height', barWidth-gap)
+            .attr('x', function(d) {
+                return (widthOpposingBars/2+marginOpposingBars.left+(labelGap/2))
+            });
+
+        rightBarsGroups.select('text')
+            .attr('class', 'right barvalue')
+            .attr('x', function(d) {
+                if(rightTopicsData) {
+                    return (widthOpposingBars/2+marginOpposingBars.left+(labelGap/2)) + xScaleOppoBarChart(rightTopicsData[d]) + 5;
+                }
+            })
+            .attr('y', function(d) {
+                bbox = this.parentNode.firstChild.getBBox();
+                return bbox.y + 12.5
+            })
+            .text(function (d) {
+                if (rightTopicsData && rightTopicsData[d] != 0) {
+                    return rightTopicsData[d].toFixed(2);
+                }
+            });
+    }
 
     /***
      /////////////////////////////////////////
@@ -444,7 +528,11 @@ d3.json('js/data/topics_data2.json').then(function (d) {
         .on("change", function () {
             let selectedValue = this.value;
             let year = years[selectedValue];
-            yearData = d.data.filter(d => d.year === year)[0];
+
+            let leftTopicsData = getFilteredTopics(topics, year, partyA)[0];
+            let rightTopicsData = getFilteredTopics(topics, year, partyB)[0];
+
+            refreshOpposingBars(leftTopicsData, rightTopicsData);
             refreshResBarChart(yearData);
             refreshLineChart(year);
         });

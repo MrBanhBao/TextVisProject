@@ -1,6 +1,6 @@
 #mySlider {
-    width: 565px;
-    transform: translate(26px, -5px);
+    width: 603px;
+    transform: translate(7px, -5px);
 }
 
 h1 {
@@ -154,5 +154,29 @@ circle.wahlbeteiligung {
     border-style: solid;
 }
 
+.x-rile path {
+    stroke-width: 3px;
+}
 
+.x-rile .tick line {
+    stroke-width: 3px;
+}
 
+.x-rile .tick text {
+    font-size: 13px;
+    transform: translateY(10px);
+}
+
+image.leftimg{
+    transform: translate(-65px, -21px);
+}
+
+image.rightimg {
+    transform: translate(460px, -25px);
+}
+
+circle {
+    r: 9px;
+    stroke: #d1e0ec;
+
+}

@@ -356,7 +356,7 @@ d3.json('js/data/topics_data2.json').then(function (d) {
 
 
 
-    let marginResults = {top: 20, right: 0, bottom: 18, left: 20};
+    let marginResults = {top: 20, right: 0, bottom: 18, left: 0};
     let widthResults = 620 - marginResults.left - marginResults.right,
         heightResults = 250 - marginResults.top - marginResults.bottom;
 
@@ -368,14 +368,6 @@ d3.json('js/data/topics_data2.json').then(function (d) {
         .attr('height', heightResults + 10);
 
 
-    // Axis
-    let yScaleLines = d3.scaleLinear()
-        .domain([100, 0])
-        .range([0, heightResults - marginResults.bottom]);
-
-    let yTicks = d3.axisLeft(yScaleLines)
-        .ticks(10);
-
     let xScaleLines = d3.scaleBand()
         .domain(years)
         .range([0, widthResults - marginResults.left]);
@@ -383,144 +375,94 @@ d3.json('js/data/topics_data2.json').then(function (d) {
     let xTicks = d3.axisBottom(xScaleLines)
         .ticks(19);
 
+    let xScaleRile = d3.scaleLinear()
+        .domain([-100, 100])
+        .range([0, widthResults - 80 - 80]);
+
+    let xRileTicks = d3.axisBottom(xScaleRile)
+        .ticks(5);
+
     // Guides
     let xGuideResults = d3.select('#topvis svg')
         .append('g')
+        .attr('class', 'x-year')
         .attr('transform', 'translate(' + (marginResults.left) + ',' + (heightResults - marginResults.bottom + 10) + ')')
         .call(xTicks);
 
-    let yGuideResults = d3.select('#topvis svg')
+    let xGuideRile = d3.select('#topvis svg')
         .append('g')
-        .attr('transform', 'translate(' + (marginResults.left + 9) + ',' + (marginResults.top - 10) + ')')
-        .call(yTicks);
+        .attr('class', 'x-rile')
+        .attr('transform', 'translate(' + (80) + ',' + (heightResults/2 - marginResults.bottom + 10) + ')')
+        .call(xRileTicks);
+
+    d3.selectAll('.x-rile .tick line')
+        .attr('y2', 15)
+
+    let leftImg = xGuideRile.append("svg:image")
+        .attr('xlink:href', './assets/left.svg')
+        .attr('class', 'leftimg')
+        .attr('width', 60)
+        .attr('height', 60);
 
 
-    let nest = d3.nest()
-        .key(function (d) {
-            return d.party
-        })
-        .entries(results);
+    let rightImg = xGuideRile.append("svg:image")
+        .attr('xlink:href', './assets/right.svg')
+        .attr('class', 'rightimg')
+        .attr('width', 60)
+        .attr('height', 60);
 
-    // !!!!! LINE CHART !!!!!!!
-    function refreshLineChart(selectedYear) {
-        // Define the line
-        let valueLine = d3.line()
-            .x(function (d) {
-                return xScaleLines(d.year) + marginResults.left + 15;
-            })
-            .y(function (d) {
-                return yScaleLines(d.result) + 10;
-            });
-
-        svgResults.selectAll(".line").remove();
-
-
-        svgResults.selectAll(".line")
-            .data(nest)
-            .enter()
-            .append("path")
-            .attr("class", function (d) {
-                return 'line ' + d.key.toLowerCase()
-            })
-            .attr("d", function (d) {
-                let dFilteredValues = d.values.filter(function (d) {
-                    return d.year <= selectedYear
-                });
-                return valueLine(dFilteredValues);
-            });
-
-
-        let dFilteredValues = results.filter(function (d) {
-            return d.year <= selectedYear
-        });
-
-        svgResults.selectAll(".dot").remove();
-
-        svgResults
-            .append("g")
-            .attr("class", "dots")
-            .selectAll("dot")
-            .data(dFilteredValues)
-            .enter()
-            .append("circle")
-            .attr("class", function (d) {
-                return 'dot ' + d.party.toLowerCase()
-            })
-            .attr("cx", function (d) {
-                return xScaleLines(d.year) + marginResults.left + 15
-            })
-            .attr("cy", function (d) {
-                return yScaleLines(d.result) + 10
-            })
-            //.transition()
-            //.duration(400)
-            .attr("r", 4)
-    }
-
-
-    /// BAR CHART
-    let xScaleResBars = d3.scaleBand()
-        .domain(parties)
-        .paddingInner(.1)
-        .paddingOuter(.1)
-        .range([0, widthResults / 3]);
-
-    let barChart = svgResults.append('g')
-        .attr('transform', 'translate(' + (widthResults / 3 + 15 + marginResults.left) + ',' + 0 + ')')
-        .attr('class', 'resBars')
-        .selectAll('.resBar')
-        .data(yearData.results)
-        .enter()
-        .append('rect')
-        .attr('class', function (d) {
-            return 'resBar ' + d.party.toLowerCase()
-        })
-        .transition()
-        .attr('width', function (d) {
-            return xScaleResBars.bandwidth();
-        })
-        .attr('height', function (d) {
-            return 0;
-        })
-        .attr('x', function (d) {
-            //console.log('xbars', xScaleResBars(d.party.toLowerCase()));
-            return xScaleResBars(d.party.toLowerCase());
-        })
-        .attr('y', function (d) {
-            return heightResults - marginResults.bottom + 10
-        });
-
-    barChart
-        .transition()
-        .duration(500)
-        .attr('y', function (d) {
-            return yScaleLines(d.result)
-        })
-        .attr('height', function (d) {
-            if (d.result) {
-                return heightResults - yScaleLines(d.result) - marginResults.bottom + 10;
+    let aCircle = xGuideRile.append('circle')
+        .attr('class', partyA.toLowerCase())
+        .attr('transform', function(d) {
+            if (leftTopicsData) {
+                return 'translate(' + xScaleRile(leftTopicsData['rile']) + ',' + (0) + ')'
             } else {
-                return 0;
-            }
+                    return 'translate(' + xScaleRile(0) + ',' + (-150) + ')'
+                }
         });
 
-    function refreshResBarChart(yearData) {
-        let bars = svgResults.select('.resBars');
+    let bCircle = xGuideRile.append('circle')
+        .attr('class', partyB.toLowerCase())
+        .attr('transform', function(d) {
+            if (rightTopicsData) {
+                return 'translate(' + xScaleRile(rightTopicsData['rile']) + ',' + (0) + ')'
+            } else {
+                    return 'translate(' + xScaleRile(0) + ',' + (-150) + ')'
+                }
+        });
 
-        bars.selectAll('rect')
-            .data(yearData.results)
+
+
+
+    // START RILE
+
+
+    function refreshRileChart(leftTopicsData, rightTopicsData) {
+        aCircle
             .transition()
-            .duration(400)
-            .attr('y', function (d) {
-                return yScaleLines(d.result)
-            })
-            .attr('height', function (d) {
-                if (d.result) {
-                    return heightResults - yScaleLines(d.result) - marginResults.bottom + 10;
+            .duration(500)
+            //.ease(d3.easeBounceOut)
+            .attr('transform', function(d) {
+                if (leftTopicsData) {
+                    return 'translate(' + xScaleRile(leftTopicsData['rile']) + ',' + (0) + ')'
                 } else {
-                    return 0;
+                    return 'translate(' + xScaleRile(0) + ',' + (-150) + ')'
                 }
             })
+            .attr('r', 8);
+
+        bCircle
+            .transition()
+            .duration(500)
+            //.ease(d3.easeBounceOut)
+            .attr('transform', function(d) {
+                if(rightTopicsData) {
+                    return 'translate(' + xScaleRile(rightTopicsData['rile']) + ',' + (0) + ')'
+                } else {
+                    return 'translate(' + xScaleRile(0) + ',' + (-150) + ')'
+                }
+            })
+            .attr('r', 8);
     }
 
     // Slider
@@ -533,10 +475,9 @@ d3.json('js/data/topics_data2.json').then(function (d) {
             let rightTopicsData = getFilteredTopics(topics, year, partyB)[0];
 
             refreshOpposingBars(leftTopicsData, rightTopicsData);
-            refreshResBarChart(yearData);
-            refreshLineChart(year);
+            refreshRileChart(leftTopicsData, rightTopicsData);
         });
     //refreshResBarChart(yearData);
-    refreshLineChart(years[0]);
+    //refreshLineChart(years[0]);
 
 });

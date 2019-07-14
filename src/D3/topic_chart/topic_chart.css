@@ -1,0 +1,158 @@
+#mySlider {
+    width: 565px;
+    transform: translate(26px, -5px);
+}
+
+h1 {
+    font-family: "Helvetica", serif;
+    font-size: 11px;
+}
+
+.bar text {
+    font-family: "Helvetica", serif;
+    font-size: 11px;
+    font-weight: bold;
+    text-anchor: middle;
+    text-align: -webkit-center;
+    fill: #121212;
+}
+
+text.barvalue {
+    display: none;
+}
+
+text.barvalue.right {
+    text-anchor: start;
+}
+
+text.barvalue.left {
+    text-anchor: end;
+}
+
+rect.cducsu {
+    fill: #343434
+}
+
+rect.spd {
+    fill: #cc0000
+}
+
+rect.fdp {
+    fill: #ffe14e
+}
+
+rect.linke {
+    fill: #9b31ab
+}
+
+rect.gruene {
+    fill: #029e00
+}
+
+rect.afd {
+    fill: #3ca4d2
+}
+
+path.cducsu {
+    stroke: #343434
+}
+
+path.spd {
+    stroke: #cc0000
+}
+
+path.fdp {
+    stroke: #ffe14e
+}
+
+path.linke {
+    stroke: #9b31ab
+}
+
+path.gruene {
+    stroke: #029e00
+}
+
+path.afd {
+    stroke: #3ca4d2
+}
+
+path.wahlbeteiligung {
+    stroke: #d1820e
+}
+
+path.line {
+    fill: none;
+    stroke-width: 3px;
+}
+
+.line {
+    opacity: 0.8;
+}
+
+.dot {
+    opacity: 0.8;
+}
+
+circle.cducsu {
+    fill: #343434
+}
+
+circle.spd {
+    fill: #cc0000
+}
+
+circle.fdp {
+    fill: #ffe14e
+}
+
+circle.linke {
+    fill: #9b31ab
+}
+
+circle.gruene {
+    fill: #029e00
+}
+
+circle.afd {
+    fill: #3ca4d2
+}
+
+circle.wahlbeteiligung {
+    fill: #d1820e
+}
+
+.resBar {
+    opacity: 0.7;
+}
+
+.resBar.wahlbeteiligung {
+    display: none;
+}
+
+.highlight g.left-bar rect, .highlight g.right-bar rect {
+    opacity: 0.6;
+}
+
+.highlight text.barvalue {
+    display: block;
+}
+
+.tooltip {
+    font-family: "Helvetica", serif;
+    font-size: 11px;
+    font-weight: bold;
+    position: absolute;
+    text-align: center;
+    padding: 8px;
+    margin-top: -20px;
+    background: #e1e1e1;
+    pointer-events: none;
+    border-radius: 5px;
+    border-color: #b9b9b9;
+    border-width: 2px;
+    border-style: solid;
+}
+
+
+

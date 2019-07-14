@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/ >
+		<!-- Initialize a select button -->
+
+
+		<!-- Google fonts -->
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+		
+		<!-- D3.js -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+		
+		<style>
+			body {
+				font-family: 'Open Sans', sans-serif;
+				font-size: 11px;
+				font-weight: 300;
+				fill: #242424;
+				text-align: center;
+				text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff, 0 -1px 0 #fff;
+				cursor: default;
+			}
+			
+			.legend {
+				font-family: 'Raleway', sans-serif;
+				fill: #333333;
+			}
+			
+			.tooltip {
+				fill: #333333;
+			}
+			
+		</style>
+	
+	</head>
+	<body>
+		<div class="radarChart"></div>
+
+		<script src="radarChart.js"></script>	
+		<script>
+      
+      /* Radar chart design created by Nadieh Bremer - VisualCinnamon.com */
+			////////////////////////////////////////////////////////////// 
+			//////////////////////// Set-Up ////////////////////////////// 
+			////////////////////////////////////////////////////////////// 
+			var marginValue=50;
+			var margin = {top: marginValue, right: marginValue, bottom: marginValue, left: marginValue},
+				width = Math.min(600, window.innerWidth - 10) - margin.left - margin.right,
+				height = Math.min(width, window.innerHeight - margin.top - margin.bottom - 20);
+			
+			
+			var word="umweltschutz";
+			var scoreType="frequency";//"tfidf";
+			
+			////////////////////////////////////////////////////////////// 
+			////////////////////////// Data ////////////////////////////// 
+			////////////////////////////////////////////////////////////// 				
+			d3.json("words_small.json", function(data) {
+
+				function getIndexOfWord(word){
+					var k;
+					var indexOfWord=-1;
+					for (k=0;k<data.data.length;k++){
+						if(data.data[k].word==word){
+							indexOfWord=k;
+							break;
+						}
+					}
+					return indexOfWord;
+				}
+				
+				function filterData(data,scoreType){
+					var wordData=data.data[indexOfWord];
+						var listOfParties=[];
+						var i;
+						for ( i=0; i<wordData.partyData.length;i++)
+						{
+							var listForParty=[]
+							scores=wordData.partyData[i].scores
+							//console.log(data.data[0].partyData[i].party)
+							
+							var j;
+							for ( j=0; j<scores.length;j++){
+								var yearDict={};
+								yearDict["axis"]=scores[j].year;
+								yearDict["value"]=scores[j].score[scoreType];
+								//yearDict["value"]=scores[j].score.frequency;
+								listForParty.push(yearDict);
+							};
+							
+							listOfParties.push(listForParty);
+						}
+						return listOfParties
+				}
+				
+				  var allGroup = ["frequency","tfidf"]
+	
+				// add the options to the button
+				d3.select("#selectButton")
+				  .selectAll('myOptions')
+					.data(allGroup)
+				  .enter()
+					.append('option')
+				  .text(function (d) { return d; }) // text showed in the menu
+				  .attr("value", function (d) { return d; }) // corresponding value returned by the button
+
+				// When the button is changed, run the updateChart function
+				d3.select("#selectButton").on("change", function(d) {
+					// recover the option that has been chosen
+					var selectedOption = d3.select(this).property("value")
+					// run the updateChart function with this selected option
+					RadarChart(".radarChart", filterData(data,selectedOption), radarChartOptions);
+				})
+				indexOfWord=getIndexOfWord(word);
+				
+				if(indexOfWord>0){
+										
+					var color = d3.scale.ordinal()
+						.range(["#3ca4d2","#343434","#029e00","#ffe14e","#9b31ab","#cc0000"]);
+						
+					var radarChartOptions = {
+					  w: width,
+					  h: height,
+					  margin: margin,
+					  //maxValue: 0.0001,
+					  levels: 6,
+					  roundStrokes: true,
+					  color: color
+					};
+					//Call function to draw the Radar chart
+					RadarChart(".radarChart", filterData(data,scoreType), radarChartOptions);
+				}
+				
+			})
+
+		</script>
+		
+	<select id="selectButton"></select>
+	</body>
+</html>

@@ -31,16 +31,24 @@ function getSelectedPartiesTopic(topics, partyA, partyB) {
 function getTopTopics(topics, partyA, partyB, n = 15) {
     let selectedPartiesTopics = getSelectedPartiesTopic(topics, partyA, partyB);
 
-    let obj = {};
+    let topicSums = {};
+    let topicCounts = {};
     selectedPartiesTopics.forEach(a => {
         Object.keys(a).forEach(k => {
             if (a[k] && typeof a[k] === 'number' && k != 'rile' && k != 'party_name' && k != 'peruncod' && k != 'year') {
-                obj[k] = obj[k] ? obj[k] + a[k] : a[k]
+                topicSums[k] = topicSums[k] ? topicSums[k] + a[k] : a[k];
+                topicCounts[k] = topicCounts[k] ? topicCounts[k] + 1 : 1;
+
             }
         })
     });
-    return Object.keys(obj).sort(function (a, b) {
-        return obj[b] - obj[a]
+
+    Object.keys(topicSums).forEach(k => {
+            topicSums[k] = topicSums[k]/topicCounts[k]
+    });
+
+    return Object.keys(topicSums).sort(function (a, b) {
+        return topicSums[b] - topicSums[a]
     }).slice(0, n)
 }
 
@@ -70,17 +78,13 @@ d3.json('js/data/topics_data2.json').then(function (d) {
     let topicMapping = d.topic_mapping;
 
     let partyA = 'Gruene',
-        partyB = 'SPD';
+        partyB = 'AFD';
 
     //let selectedPartyTopics = d.data.flatMap(d => d.topics.filter(topic => topic.party_name.toLowerCase() === partyA.toLowerCase() ||
     //    topic.party_name.toLowerCase() === partyB.toLowerCase()));
 
     let topicPercentages = getTopicPercentages(topics);
     let topTopics = getTopTopics(topics, partyA, partyB, 15);
-
-    console.log(topTopics);
-    console.log(topics.filter(topic => topic.party_name.toLowerCase() === partyA.toLowerCase() ||
-        topic.party_name.toLowerCase() === partyB.toLowerCase()));
 
     /***
      /////////////////////////////////////////

@@ -77,7 +77,7 @@ d3.json('js/data/topics_data2.json').then(function (d) {
     let topics = d.data.flatMap(d => d.topics)
     let topicMapping = d.topic_mapping;
 
-    let partyA = 'Gruene',
+    let partyA = 'Linke',
         partyB = 'AFD';
 
     //let selectedPartyTopics = d.data.flatMap(d => d.topics.filter(topic => topic.party_name.toLowerCase() === partyA.toLowerCase() ||
@@ -362,7 +362,7 @@ d3.json('js/data/topics_data2.json').then(function (d) {
 
     let marginResults = {top: 20, right: 0, bottom: 18, left: 0};
     let widthResults = 620 - marginResults.left - marginResults.right,
-        heightResults = 250 - marginResults.top - marginResults.bottom;
+        heightResults = 180 - marginResults.top - marginResults.bottom;
 
 
     // SVG

@@ -69,7 +69,7 @@ d3.json('js/data/topics_data2.json').then(function (d) {
     let topics = d.data.flatMap(d => d.topics)
     let topicMapping = d.topic_mapping;
 
-    let partyA = 'Linke',
+    let partyA = 'Gruene',
         partyB = 'SPD';
 
     //let selectedPartyTopics = d.data.flatMap(d => d.topics.filter(topic => topic.party_name.toLowerCase() === partyA.toLowerCase() ||
@@ -229,7 +229,7 @@ d3.json('js/data/topics_data2.json').then(function (d) {
             return bbox.y + 12.5
         })
         .text(function (d) {
-            if (leftTopicsData[d] != 0) {
+            if (leftTopicsData && leftTopicsData[d] != 0) {
                 return leftTopicsData[d].toFixed(2);
             }
         });

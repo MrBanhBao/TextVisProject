@@ -59,9 +59,14 @@ d3.json("readability.json", function(data) {
     // Reformat the data: we need an array of arrays of {x, y} tuples
     var dataReady = filteredData()
     // A color scale: one color for each group
-	var myColor = d3.scaleOrdinal()
+	/*var myColor = d3.scaleOrdinal()
 		.domain(parties)
-		.range(["#21a1ff","#343434","#029e00","#ffe800","#900C3F","#cc0000"]);
+		.range(["#21a1ff","#343434","#029e00","#ffe800","#900C3F","#cc0000"]);*/
+		
+	
+	var myColor = d3.scaleOrdinal()
+		.domain(["afd", "union","gruene", "fdp", "linke", "spd"])
+		.range(["#3ca4d2","#343434","#029e00","#ffe14e","#9b31ab","#cc0000"]);
 
     // Add X axis --> it is a date format
 	

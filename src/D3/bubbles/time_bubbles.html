@@ -90,6 +90,7 @@ var svg = d3.select("#my_dataviz")
 //Read the data
 //d3.csv("bubbles_data4.csv", function(data) {
 d3.json("time_bubbles.json", function(data) {
+console.log(data)
 	// ---------------------------//
 	//       SCALE  AND  AXIS     //
 	// ---------------------------//
@@ -242,7 +243,7 @@ d3.json("time_bubbles.json", function(data) {
 		tooltip
 		  .style("opacity", 1)
 		  //.html(d.label)
-		  .html(data.parties[data.parties.findIndex(obj => obj.slug==d.party)].name+" | "+d.label)
+		  .html(data.parties[data.parties.findIndex(obj => obj.slug==d.party)].label+" | "+d.label)
 		  .style("left", (d3.mouse(this)[0]+30) + "px")
 		  .style("top", (d3.mouse(this)[1]+30) + "px")
 	}
@@ -511,7 +512,7 @@ d3.json("time_bubbles.json", function(data) {
         .style("fill", function(d){ return myColor(d.slug)})
 		.attr("stroke-width", 0.2)
 		.attr("stroke", "#000000")
-        .text(function(d){ return d.name})
+        .text(function(d){ return d.label})
         .attr("text-anchor", "left")
         .style("alignment-baseline", "middle")
         .on("mouseover", highlight)
